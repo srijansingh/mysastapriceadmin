@@ -198,13 +198,13 @@ class App extends Component {
             )}
           />
 
-          <Route
+          {/* <Route
             path="/add-category"
             exact
             render={props => (
               <Add userId={this.state.userId}  token={this.state.token} />
             )}
-          />
+          /> */}
           <Redirect to="/" />
         </Switch>
         </div>

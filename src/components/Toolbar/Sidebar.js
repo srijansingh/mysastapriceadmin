@@ -67,10 +67,10 @@ const styles = (theme) => ({
                             <ListItemText primary="Search Product" />
                     </ListItemLink>
 
-                    <ListItemLink key="1"  href="/add-category">
+                    {/* <ListItemLink key="1"  href="/add-category">
                             <ListItemIcon><LabelIcon style={{color:"blue"}}/></ListItemIcon>
                             <ListItemText primary="Add Category" />
-                    </ListItemLink>
+                    </ListItemLink> */}
                              
                     <ListItemLink key="2" href="/active">
                             <ListItemIcon><LabelIcon style={{color:"blue"}}/></ListItemIcon>
