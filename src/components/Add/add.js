@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
+import { baseUrl } from "../../config/baseUrl";
 
 
 
@@ -32,7 +33,7 @@ class  Customer extends Component {
             isLoading:true
         })
 
-        fetch('https://server.mysastaprice.com/api/scrapper', {
+        fetch(baseUrl+'/api/scrapper', {
             method :'POST',
             headers: {
                 "Accept": "application/json",

@@ -5,8 +5,8 @@
 }
 
 .product-images{
-    width:250px;
-    height:200px;
+    max-width:150px;
+    height:100px;
     display:flex;
     flex-direction:column;
     justify-content: space-around;
@@ -16,7 +16,7 @@
 
 .product-images img{
     /* width:180px; */
-    height:200px;
+    height:100px;
    
     
 }

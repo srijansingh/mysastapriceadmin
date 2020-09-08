@@ -13,6 +13,7 @@ import Brand from './components/Brand/brand';
 import Customer from './components/Customer/customer';
 import Account from './components/Account/account';
 import Add from './components/Add/add';
+import { baseUrl } from './config/baseUrl';
 class App extends Component {
   state = {
     isAuth: false,
@@ -49,14 +50,14 @@ class App extends Component {
     localStorage.removeItem('expiryDate');
     localStorage.removeItem('userId');
     localStorage.removeItem('user');
-
+    
 
   };
 
   loginHandler = (event, authData) => {
     event.preventDefault();
     this.setState({ authLoading: true });
-    fetch('https://warm-scrubland-66696.herokuapp.com/auth/login', {
+    fetch(baseUrl+'/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -174,13 +175,13 @@ class App extends Component {
             )}
           />
 
-           <Route
+           {/* <Route
             path="/brand"
             exact
             render={props => (
               <Brand userId={this.state.userId}  token={this.state.token} />
             )}
-          />
+          /> */}
 
            <Route
             path="/customers"

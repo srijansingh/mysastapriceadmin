@@ -1,8 +1,14 @@
 import React, {Component} from "react";
 import { withStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
+import { Typography,Paper } from "@material-ui/core";
 import CustomerComponent from "./component/customerComponent";
-
+import { baseUrl } from "../../config/baseUrl";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 const styles = (theme) => ({
     root: {
@@ -32,7 +38,7 @@ class  Customer extends Component {
         })
 
 
-        fetch('https://server.mysastaprice.com/api/customer', {
+        fetch(baseUrl+'/api/customer', {
             method: "GET",
             headers: {
                 "Accept": "application/json",
@@ -68,7 +74,7 @@ class  Customer extends Component {
        
     render(){
 
-        // const {classes} = this.props;
+        const {classes} = this.props;
         
         const customers = this.state.customer.map((list, index) => {
             return <CustomerComponent key={index} index={index} name={list.name} email={list.email} />
@@ -95,15 +101,21 @@ class  Customer extends Component {
                 flexWrap:'wrap',
                 padding:'0.5rem'
                 }}>
-                <div style={{ width:'100%', display:'flex', flexDirection:'column', alignItems:'center'}}>
-                   <table style={{ width:'700px'}}>
-                       <tr style={{ background:'#e6e6e6'}}>
-                       <th style={{padding:'10px'}}>S No.</th>
-                           <th style={{padding:'10px'}}>Name</th>
-                           <th style={{padding:'10px'}}>Email</th>
-                       </tr>
-                       {customers}
-                   </table>
+                <div style={{ width:'500px', display:'flex', flexDirection:'column', alignItems:'center'}}>
+                <TableContainer className={classes.container} component={Paper}>
+                        <Table className={classes.table} aria-label="simple table">
+                            <TableHead style={{fontWeight:'bold'}}>
+                                <TableRow>  
+                                    <TableCell align="center">Name</TableCell>
+                                    <TableCell align="center">Email</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {customers}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+
                 </div>
 
                 

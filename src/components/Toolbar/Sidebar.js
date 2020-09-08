@@ -86,10 +86,10 @@ const styles = (theme) => ({
 
                    
 
-                    <ListItemLink key="4" href="/brand">
+                    {/* <ListItemLink key="4" href="/brand">
                             <ListItemIcon><BrandingWatermarkOutlinedIcon style={{color:"blue"}} /></ListItemIcon>
                             <ListItemText primary="Brand" />
-                    </ListItemLink>
+                    </ListItemLink> */}
 
                     <ListItemLink key="5" href="/customers">
                             <ListItemIcon><FaceIcon style={{color:"blue"}} /></ListItemIcon>
@@ -108,13 +108,6 @@ const styles = (theme) => ({
                     <Collapse in={this.state.open} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
 
-                        <NestedListItemLink key="6" className={classes.nested} href="/myprofile">
-                            <ListItemIcon>
-                            <AccountCircleIcon style={{color:"black"}}/>
-                            </ListItemIcon>
-                            <ListItemText primary="Profile" />
-                        </NestedListItemLink>
-                        
                         <NestedListItemLink key="7" className={classes.nested} onClick={this.props.logout}>
                             <ListItemIcon>
                                 <ExitToAppIcon style={{color:"black"}}/>

@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
 
 export default class CustomerComponent extends Component {
     render() {
@@ -11,11 +13,10 @@ export default class CustomerComponent extends Component {
             back = "ffffff"
         }
         return (
-           <tr style={{background:back}}>
-               <th style={{padding:'10px'}}>{this.props.index+1}</th>
-               <td style={{padding:'10px'}}>{this.props.name}</td>
-               <td style={{padding:'10px'}}>{this.props.email}</td>
-           </tr>
+            <TableRow key={this.props.index}>
+                <TableCell align="center">{this.props.name}</TableCell>
+                <TableCell align="center">{this.props.email}</TableCell>
+            </TableRow>
         )
     }
 }

@@ -4,16 +4,17 @@ import Paper from '@material-ui/core/Paper';
 import Button from "@material-ui/core/Button";
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import AddBoxRoundedIcon from '@material-ui/icons/AddBoxRounded';
-import "./brandProduct.css";
+import "../../Toolbar/ProductComponent.css";
+import { baseUrl } from '../../../config/baseUrl';
 
 const styles = (theme) => ({
     root: {
       display: 'flex',
       flexWrap: 'wrap',
       '& > *': {
-        margin: theme.spacing(1),
-        width: theme.spacing(16),
-        height: theme.spacing(16),
+        margin: theme.spacing(0.1),
+        width: theme.spacing(2),
+        height: theme.spacing(2),
       },
     },
   });
@@ -22,7 +23,7 @@ class BrandProduct extends Component {
 
   handleStatus =(sid) => {
 
-    fetch('https://server.mysastaprice.com/api/update/active', {
+    fetch(baseUrl+'/api/update/active', {
       method: 'PUT',
       headers : {
         "Accept": "application/json",
@@ -60,7 +61,7 @@ class BrandProduct extends Component {
         }
         return (
           <div className={classes.root}>
-            <Paper elevation={3} className="product" style={{height:'200px', width:'100%'}}>
+            <Paper elevation={1} className="product" style={{width:'100%'}}>
                 <div className="product-images">
                   <img src={this.props.image} alt={this.props.title} />
                 </div>
@@ -72,9 +73,12 @@ class BrandProduct extends Component {
                       <span>{status}</span>
                     
                   </div>
+                 
+                </div>
+                <div >
                   <div className="action-box">
-                    <Button href={this.props.link} variant="contained" color="secondary" style={{marginRight:'0.5rem',  backgroundColor:'blue', color:'white'}}><ShoppingBasketIcon style={{paddingRight:'0.5rem'}}/>Visit at Amazon</Button>
-                    <Button onClick={(sid) => {this.handleStatus(this.props.productId)}}  variant="contained"  style={{margin:'0 0.5rem', backgroundColor:'blue', color:'white'}}><AddBoxRoundedIcon style={{paddingRight:'0.5rem'}} />Add to Catalog</Button>
+                    <Button href={this.props.link} variant="outlined" color="primary" size="small" style={{width:'100px', marginBottom:'5px'}}><ShoppingBasketIcon style={{paddingRight:'0.5rem'}}/>Visit</Button>
+                    <Button onClick={(sid) => {this.handleStatus(this.props.productId)}} variant="outlined" size="small" color="primary" style={{width:'100px',marginTop:'5px'}} ><AddBoxRoundedIcon style={{paddingRight:'0.5rem'}} />Select</Button>
                   </div>
                 </div>
             </Paper>

@@ -9,6 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import "./brand.css";
+import { baseUrl } from "../../config/baseUrl";
 
 const styles = (theme) => ({
     root: {
@@ -82,7 +83,7 @@ class Brand extends Component {
             isLoading:true
         });
 
-        fetch('https://server.mysastaprice.com/api/brand', {
+        fetch(baseUrl+'/api/brand', {
             method: "GET",
             headers: {
                 "Accept": "application/json",
@@ -121,7 +122,7 @@ class Brand extends Component {
             isProductLoading:true
         });
 
-        fetch('https://server.mysastaprice.com/api/brand/product', {
+        fetch(baseUrl+'/api/brand/product', {
             method :'POST',
             headers: {
                 "Accept": "application/json",
@@ -280,7 +281,7 @@ class Brand extends Component {
                </Typography>
             </div>
             <div style={{
-                height:'100vh',
+                height:'80vh',
                 // overflowY:'scroll',
                 // overflowX:'hidden',
                 display:'flex',
@@ -292,12 +293,16 @@ class Brand extends Component {
                         display:'flex',
                         flexDirection:'column',
                         
-                        flexWrap:'wrap',height:'100vh',width:'250px', borderRight:"2px solid #e6e6e6"}}>
-                            <div style={{overflowY:'scroll',
+                        flexWrap:'wrap',
+                        height:'100vh',
+                        width:'250px', 
+                        borderRight:"2px solid #e6e6e6"}}
+                        >
+                            {/* <div style={{overflowY:'scroll',
                         overflowX:'hidden',
-                        height:'100vh'}}>
+                        height:'100vh'}}> */}
                         {Listing}
-                        </div>
+                    {/* </div> */}
                     </div>
                     <div style={{
                         position:'absolute',

@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import CountComponent from "./component/countComponent";
+import { baseUrl } from "../../config/baseUrl";
 
 
 const styles = (theme) => ({
@@ -30,7 +31,7 @@ class  Dashboard extends Component {
     }
 
     componentDidMount(){
-        fetch('https://server.mysastaprice.com/api/count', {
+        fetch(baseUrl+'/api/count', {
             method: "GET",
             headers: {
                 "Accept": "application/json",

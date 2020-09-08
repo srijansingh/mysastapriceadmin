@@ -3,28 +3,52 @@ import { withStyles } from "@material-ui/core/styles";
 import Paper from '@material-ui/core/Paper';
 import Button from "@material-ui/core/Button";
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
+import Checkbox from '@material-ui/core/Checkbox';
 import AddBoxRoundedIcon from '@material-ui/icons/AddBoxRounded';
-import "./categoryProduct.css";
+import "../../Toolbar/ProductComponent.css";
+import { baseUrl } from '../../../config/baseUrl';
 
 const styles = (theme) => ({
     root: {
       display: 'flex',
       flexWrap: 'wrap',
       '& > *': {
-        margin: theme.spacing(1),
-        width: theme.spacing(16),
-        height: theme.spacing(16),
+        margin: theme.spacing(0.1),
+        width: theme.spacing(2),
+        height: theme.spacing(2),
       },
     },
   });
 
 class CategoryProduct extends Component {
+  constructor(props){
+    super(props);
+    this.state={
+      checked: false,
+      checkedBoxes: []
+    }
+  }
 
+  handleChange = (event, id) => {
+    
+    if(event.target.checked) {
+			let arr = this.state.checkedBoxes;
+			arr.push(id);
+      console.log(arr)
+			this.setState = { checkedBoxes: arr};
+		} else{
+      let items = this.state.checkedBoxes.splice(this.state.checkedBoxes.indexOf(id), 1);
+      this.setState = {
+				checkedBoxes: items
+			}
+    }
+    
 
+  };
 
   handleStatus =(sid) => {
 
-    fetch('https://server.mysastaprice.com/api/update/active', {
+    fetch(baseUrl+'/api/update/active', {
       method: 'PUT',
       headers : {
         "Accept": "application/json",
@@ -61,9 +85,18 @@ class CategoryProduct extends Component {
         else{
           status = <div style={{color:'red'}}>Inactive</div>
         }
+        
         return (
           <div className={classes.root}>
-            <Paper elevation={3} className="product" style={{height:'200px', width:'100%'}}>
+            <Paper elevation={1} className="product" style={{width:"100%"}}>
+              <div>
+                  <Checkbox
+                    checked={this.state.checkedBoxes.find(p => p === this.props.productId)}
+                    value={this.props.productId}
+                    onChange={(event) => this.handleChange(event, this.props.productId)}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                  />
+              </div>
                 <div className="product-images">
                   <img src={this.props.image} alt={this.props.title} />
                 </div>
@@ -75,9 +108,12 @@ class CategoryProduct extends Component {
                       <span>{status}</span>
                     
                   </div>
+                  
+                </div>
+                <div >
                   <div className="action-box">
-                    <Button href={this.props.link} variant="contained" color="secondary" style={{marginRight:'0.5rem',  backgroundColor:'blue', color:'white'}}><ShoppingBasketIcon style={{paddingRight:'0.5rem'}}/>Visit at Amazon</Button>
-                    <Button onClick={(sid) => {this.handleStatus(this.props.productId)}} variant="contained"  style={{margin:'0 0.5rem', backgroundColor:'blue', color:'white'}}><AddBoxRoundedIcon style={{paddingRight:'0.5rem'}} />Add to Catalog</Button>
+                    <Button href={this.props.link} variant="outlined" color="primary" size="small" style={{width:'100px', marginBottom:'5px'}}><ShoppingBasketIcon style={{paddingRight:'0.5rem'}}/>Visit</Button>
+                    <Button onClick={(sid) => {this.handleStatus(this.props.productId)}} variant="outlined" size="small" color="primary" style={{width:'100px',marginTop:'5px'}} ><AddBoxRoundedIcon style={{paddingRight:'0.5rem'}} />Select</Button>
                   </div>
                 </div>
             </Paper>

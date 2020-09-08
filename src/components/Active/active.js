@@ -1,10 +1,11 @@
 import React, {Component} from "react";
 import Paper from '@material-ui/core/Paper';
 import {fade, withStyles } from "@material-ui/core/styles";
-import { CircularProgress, Typography } from "@material-ui/core";
-import ActiveComponent from "./component/activeComponent";
+import { CircularProgress, Typography, Checkbox, Divider, Button } from "@material-ui/core";
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 
 import "./active.css"
+import { baseUrl } from "../../config/baseUrl";
 
 
 const styles = (theme) => ({
@@ -65,7 +66,8 @@ class Active extends Component {
         this.state = {
             isLoading: false,
             products : [],
-            count:null
+            count:null,
+            checkedBoxes:[]
         }
     }
 
@@ -75,7 +77,7 @@ class Active extends Component {
             isLoading:true
         });
 
-        fetch('https://server.mysastaprice.com/api/activeproduct', {
+        fetch(baseUrl+'/api/activeproduct', {
             method: "GET",
             headers: {
                 "Accept": "application/json",
@@ -107,6 +109,54 @@ class Active extends Component {
         })
     }
 
+
+    handleChange = (event, id) => {
+    
+        if(event.target.checked) {
+                let arr = this.state.checkedBoxes;
+                let ids =`${id}`
+                arr.push(ids);
+                this.setState = { checkedBoxes: arr};
+                console.log(arr)
+            } else{
+          let items = this.state.checkedBoxes.splice(this.state.checkedBoxes.indexOf(`${id}`), 1);
+          this.setState = {
+                    checkedBoxes: items
+                }
+        }
+        
+    
+      };
+
+    
+
+      handleUpdateStatus = () => {
+            fetch(baseUrl+'/api/update/inactive', {
+                method: 'PUT',
+                headers : {
+                  "Accept": "application/json",
+                  "Content-Type": "application/json",
+                  Authorization : 'Bearer '+ this.props.token
+                },
+                body : JSON.stringify({checkedBoxes:this.state.checkedBoxes})
+              })
+              .then(res => {
+                if(res.status !==200 ){
+                  throw new Error('Could not add to Catalogue')
+                }
+                return res.json()
+              })
+              .then(response => {
+                    console.log(response);
+                    alert("Product added to catalogue");
+                     window.location.reload(false);
+            })
+            .catch(err => {
+                console.log(err);
+                alert(err)
+            })
+         
+      }
     
 
     render(){
@@ -156,19 +206,56 @@ class Active extends Component {
         }
 
         else if(this.state.products!==[]){
-            Listing = this.state.products.map((product, index) => {
-               return <ActiveComponent
-                key={product._id} 
-                image={product.image} 
-                title={product.title}
-                brand = {product.brand}
-                link={product.link}
-                price={product.price} 
-                status={product.status}
-                rating={product.rating} 
-                productId={product._id} 
-
-                />
+            Listing= this.state.products.map((product, index) => {
+    
+            let status;
+            if(product.status === 'active'){
+            status = <div style={{color:'lawngreen'}}>Active</div>
+            }
+            else{
+              status = <div style={{color:'red'}}>Inactive</div>
+            }
+    
+               return (
+                    <div key={product._id} className={classes.root}>
+                        <Paper elevation={1} className="product" style={{width:"800px", padding:'5px 0'}}>
+                            <div className="product-check">
+                                
+                          
+                            <Checkbox
+                                            checked={this.state.checkedBoxes.find(p => p === product._id)}
+                                            value={product.productId}
+                                            onChange={(event) => this.handleChange(event, product._id)}
+                                            color="primary"
+                                            inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                            style={{ border:'1px solid #e6e6e6'}}
+                                    >
+        
+                                <Divider orientation="vertical" flexItem />
+                                 </Checkbox>  
+                                
+                            </div>
+                                <div className="product-images">
+                                <img src={product.image} alt={product.title} />
+                                </div>
+                                <div className="product-box">
+                                <div className="product-details">
+                                    <span className="title">{product.title}</span>
+                                    <span style={{fontWeight:'bold'}}>Price : <span style={{fontWeight:'normal'}}>{product.price}</span></span>
+                                    <span style={{fontWeight:'bold'}}>Rating :<span style={{fontWeight:'normal'}}>{product.rating}</span></span>
+                                    <span>{status}</span>
+                                    
+                                </div>
+                                
+                                </div>
+                                <div >
+                                <div className="action-box">
+                                    <Button href={product.link} variant="outlined" color="primary" size="small" style={{width:'100px', marginBottom:'5px'}}><ShoppingBasketIcon style={{paddingRight:'0.5rem'}}/>Visit</Button>
+                                </div>
+                            </div>
+                        </Paper>
+                    </div>
+               )
            })
        
        }
@@ -193,6 +280,12 @@ class Active extends Component {
                <Typography style={{color:'white'}}>
                   Total Product : {productCount}
                </Typography>
+               <Typography style={{color:'white'}}>
+                    
+                        
+                    <Button style={{width:'200px'}} size="small" color="secondary" variant="contained" onClick={this.handleUpdateStatus}>Remove from Catalog</Button>
+                   
+            </Typography>
             </div>
             <div style={{
                 height:'95vh',

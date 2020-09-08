@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import Paper from '@material-ui/core/Paper';
 import {fade, withStyles } from "@material-ui/core/styles";
-import { CircularProgress, Typography } from "@material-ui/core";
+import { CircularProgress, Typography, FormControlLabel, Divider } from "@material-ui/core";
 import CategoryComponent from "./component/categoryComponent";
 import CategoryProduct from "./component/categoryProduct";
 import List from '@material-ui/core/List';
@@ -9,7 +9,14 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 
+import Button from "@material-ui/core/Button";
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
+import Checkbox from '@material-ui/core/Checkbox';
+import AddBoxRoundedIcon from '@material-ui/icons/AddBoxRounded';
+
 import "./category.css";
+import "../Toolbar/ProductComponent.css";
+import { baseUrl } from "../../config/baseUrl";
 
 const styles = (theme) => ({
     root: {
@@ -59,7 +66,13 @@ const styles = (theme) => ({
       [theme.breakpoints.up('md')]: {
         width: '20ch',
       },
-    }
+    },
+    '& svg': {
+        margin: theme.spacing(1.5),
+      },
+      '& hr': {
+        margin: theme.spacing(0, 0.5),
+      },
   });
   
 
@@ -73,7 +86,8 @@ class Category extends Component {
             products:[],
             countCategory:null,
             countProduct:null,
-            selected : null
+            selected : null,
+            checkedBoxes:[]
 
         }
     }
@@ -83,7 +97,7 @@ class Category extends Component {
             isLoading:true
         });
 
-        fetch('https://server.mysastaprice.com/api/category', {
+        fetch(baseUrl+'/api/category', {
             method: "GET",
             headers: {
                 "Accept": "application/json",
@@ -122,7 +136,7 @@ class Category extends Component {
             isProductLoading:true
         });
 
-        fetch('https://server.mysastaprice.com/api/category/product', {
+        fetch(baseUrl+'/api/category/product', {
             method :'POST',
             headers: {
                 "Accept": "application/json",
@@ -153,7 +167,56 @@ class Category extends Component {
             alert(err)
         })
     }
+
     
+
+    handleChange = (event, id) => {
+    
+        if(event.target.checked) {
+                let arr = this.state.checkedBoxes;
+                let ids =`${id}`
+                arr.push(ids);
+                this.setState = { checkedBoxes: arr};
+                console.log(arr)
+            } else{
+          let items = this.state.checkedBoxes.splice(this.state.checkedBoxes.indexOf(`${id}`), 1);
+          this.setState = {
+                    checkedBoxes: items
+                }
+        }
+        
+    
+      };
+
+    
+
+      handleUpdateStatus = () => {
+            fetch(baseUrl+'/api/update/active', {
+                method: 'PUT',
+                headers : {
+                  "Accept": "application/json",
+                  "Content-Type": "application/json",
+                  Authorization : 'Bearer '+ this.props.token
+                },
+                body : JSON.stringify({checkedBoxes:this.state.checkedBoxes})
+              })
+              .then(res => {
+                if(res.status !==200 ){
+                  throw new Error('Could not add to Catalogue')
+                }
+                return res.json()
+              })
+              .then(response => {
+                    console.log(response);
+                    alert("Product added to catalogue");
+                     window.location.reload(false);
+            })
+            .catch(err => {
+                console.log(err);
+                alert(err)
+            })
+         
+      }
 
     render(){
 
@@ -161,7 +224,7 @@ class Category extends Component {
         let Listing;
         if(this.state.isLoading){
             Listing = (
-                <List >
+                <List>
 
                         <ListItem>
                                 <ListItemIcon><CircularProgress style={{color:"blue"}}/></ListItemIcon>
@@ -251,66 +314,101 @@ class Category extends Component {
 
     else if(this.state.products!==[]){
         ProductList= this.state.products.map((product, index) => {
-           return <CategoryProduct
-            key={product._id} 
-            image={product.image} 
-            title={product.title}
-            brand = {product.brand}
-            link={product.link}
-            price={product.price} 
-            status={product.status}
-            rating={product.rating} 
-            productId={product._id} 
-            token={this.props.token}
 
-            />
+        let status;
+        if(product.status === 'active'){
+        status = <div style={{color:'lawngreen'}}>Active</div>
+        }
+        else{
+          status = <div style={{color:'red'}}>Inactive</div>
+        }
+
+           return (
+                <div key={product._id} className={classes.root}>
+                    <Paper elevation={1} className="product" style={{width:"100%"}}>
+                        <div className="product-check">
+                            
+                      
+                        <Checkbox
+                                        checked={this.state.checkedBoxes.find(p => p === product._id)}
+                                        value={product.productId}
+                                        onChange={(event) => this.handleChange(event, product._id)}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                        style={{ border:'1px solid #e6e6e6'}}
+                                >
+    
+                            <Divider orientation="vertical" flexItem />
+                             </Checkbox>  
+                            
+                        </div>
+                            <div className="product-images">
+                            <img src={product.image} alt={product.title} />
+                            </div>
+                            <div className="product-box">
+                            <div className="product-details">
+                                <span className="title">{product.title}</span>
+                                <span style={{fontWeight:'bold'}}>Price : <span style={{fontWeight:'normal'}}>{product.price}</span></span>
+                                <span style={{fontWeight:'bold'}}>Rating :<span style={{fontWeight:'normal'}}>{product.rating}</span></span>
+                                <span>{status}</span>
+                                
+                            </div>
+                            
+                            </div>
+                            <div >
+                            <div className="action-box">
+                                <Button href={product.link} variant="outlined" color="primary" size="small" style={{width:'100px', marginBottom:'5px'}}><ShoppingBasketIcon style={{paddingRight:'0.5rem'}}/>Visit</Button>
+                            </div>
+                        </div>
+                    </Paper>
+                </div>
+           )
        })
    
    }
-   
-
-
-
-
-       
+    
         return (
             <div>
-            <div style={{background:'rgb(50, 70, 246)', padding:'0.8rem', display:'flex', justifyContent:'space-between'}}>
-               <Typography style={{color:'white'}}>
-                  Category
-               </Typography>
+                <div style={{background:'rgb(50, 70, 246)', padding:'0.8rem', display:'flex', justifyContent:'space-between'}}>
+                <Typography style={{color:'white'}}>
+                    Category {this.state.count}
+                </Typography>
 
-               <Typography style={{color:'white'}}>
-                  Total Category : {this.state.count}
-               </Typography>
-            </div>
-            <div style={{
-                height:'80vh',
-                // overflowY:'scroll',
-                // overflowX:'hidden',
-                display:'flex',
-                flexDirection:'row',
-                justifyContent:'space-between'
-                }}>
-                    <div style={{
-                        position:"fixed",
+                <Typography style={{color:'white'}}>
+                    
+                        
+                        <Button style={{width:'200px'}} size="small" color="secondary" variant="contained" onClick={this.handleUpdateStatus}>Add to Catalog</Button>
+                       
+                </Typography>
+                </div>
+               
+                <div style={{
+                        height:'80vh',
                         display:'flex',
-                        flexDirection:'column',
-                        flexWrap:'wrap',height:'100vh',width:'250px', borderRight:"2px solid #e6e6e6"}}>
-                        {Listing}
-                    </div>
-                    <div style={{
-                        position:'absolute',
-                        maxWidth:'850px',
-                        width:'100%',
-                        left:'260px',
-                        height:'100vh',
-                        overflowY:'scroll',
-                        overflowX:'hidden',
+                        flexDirection:'row',
+                        justifyContent:'space-between'
                     }}>
-                        {ProductList}
-                    </div>
-            </div>
+                        <div style={{
+                                position:"fixed",
+                                display:'flex',
+                                flexDirection:'column',
+                                flexWrap:'wrap',height:'100vh',width:'250px', borderRight:"2px solid #e6e6e6"
+                            }}>
+                            {Listing}
+                        </div>
+                        <div style={{
+                            position:'absolute',
+                            maxWidth:'850px',
+                            width:'100%',
+                            left:'260px',
+                            height:'100vh',
+                            overflowY:'scroll',
+                            overflowX:'hidden',
+                        }}>
+                            
+                            {ProductList}
+                        </div>
+                </div>
             </div>
         )
     }

@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from "@material-ui/core/Button";
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import AddBoxRoundedIcon from '@material-ui/icons/AddBoxRounded';
-import "./searchResult.css";
+import "../../Toolbar/ProductComponent.css";
 
 const styles = (theme) => ({
     root: {

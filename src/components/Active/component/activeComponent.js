@@ -4,16 +4,16 @@ import Paper from '@material-ui/core/Paper';
 import Button from "@material-ui/core/Button";
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import AddBoxRoundedIcon from '@material-ui/icons/AddBoxRounded';
-import "./activeComponent.css";
+import "../../Toolbar/ProductComponent.css";
 
 const styles = (theme) => ({
     root: {
       display: 'flex',
       flexWrap: 'wrap',
       '& > *': {
-        margin: theme.spacing(1),
-        width: theme.spacing(16),
-        height: theme.spacing(16),
+        margin: theme.spacing(0.1),
+        width: theme.spacing(10),
+        height: theme.spacing(2),
       },
     },
   });
@@ -30,7 +30,7 @@ class ActiveComponent extends Component {
         }
         return (
           <div className={classes.root}>
-            <Paper elevation={3} className="product" style={{height:'200px', width:'800px'}}>
+            <Paper elevation={1} className="product" style={{width:'800px'}}>
                 <div className="product-images">
                   <img src={this.props.image} alt={this.props.title} />
                 </div>
@@ -42,8 +42,11 @@ class ActiveComponent extends Component {
                       <span>{status}</span>
                     
                   </div>
-                  <div className="action-box">
-                    <Button href={this.props.link} target="blank" variant="contained" color="secondary" style={{marginRight:'0.5rem',  backgroundColor:'blue', color:'white'}}><ShoppingBasketIcon style={{paddingRight:'0.5rem'}}/>Visit at Amazon</Button>
+                  
+                </div>
+                <div>
+                <div className="action-box">
+                    <Button href={this.props.link} target="blank" size="small" variant="outlined" color="primary"><ShoppingBasketIcon style={{paddingRight:'0.5rem'}}/>Visit</Button>
                     {/* <Button variant="contained"  style={{margin:'0 0.5rem', backgroundColor:'blue', color:'white'}}><AddBoxRoundedIcon style={{paddingRight:'0.5rem'}} />Add to Catalog</Button> */}
                   </div>
                 </div>
